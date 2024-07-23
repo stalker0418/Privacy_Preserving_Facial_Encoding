@@ -1,0 +1,24 @@
+data_root: image_data
+
+data_read:
+  train_dir: data/test_data/x_train
+  test_dir: data/test_data/x_test
+  index_separator: _
+  image_id_index: 2
+  label_index: 4
+
+encoding_techniques:
+  single_convolution: True
+  double_convolution: False
+  patch_convolution: False
+  pseudo_differential_privacy: False
+  pseudo_differential_privacy_patched: False
+  differential_privacy: False
+  differential_privacy_patched: False
+  differential_privacy_single_convolution: False
+
+save_encoding_images:
+  enabled: False
+  output_dir: data/encoded_data/
+
+
