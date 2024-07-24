@@ -1,1 +1,13 @@
-save_images: True
+image_channels: 1
+
+unfreeze_layers:
+  enabled: True
+  layers: ["layer4"]
+
+learning_rate: 0.004
+momentum: 0.9
+
+fc_layer_size: 512
+
+
+  

@@ -48,4 +48,19 @@ class ConfigurationManager:
             output_dir= config.output_dir
         )
         return save_encoded_images_config
+     
+    def get_model_initialization_config(self):
+        param = self.params
+        model_initialization_config = ModelInitializerConfig(
+            image_channels= param.image_channels,
+            unfreeze_layers= unfreezingModelConfig(
+                enabled= param.unfreeze_layers.enabled,
+                layers= param.unfreeze_layers.layers
+            ),
+            learning_rate = param.learning_rate,
+            momentum= param.momentum,
+            fc_layer_size = param.fc_layer_size
+        )
+        return model_initialization_config
+    
     

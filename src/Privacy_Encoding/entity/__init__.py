@@ -26,6 +26,22 @@ class saveEncodedImagesConfig:
     output_dir: Path
 
 
+@dataclass(frozen=True)
+class unfreezingModelConfig:
+    enabled: bool
+    layers: list[str]
+
+@dataclass(frozen=True)
+class ModelInitializerConfig:
+    image_channels: int
+    unfreeze_layers: unfreezingModelConfig
+    learning_rate: float
+    momentum: float
+    fc_layer_size: int
+
+
+
+
 
 
 
