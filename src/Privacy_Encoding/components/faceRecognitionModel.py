@@ -1,4 +1,4 @@
-from torchvision.models import models
+import torchvision.models as models
 import torch
 from src.Privacy_Encoding.config.configuration import ModelInitializerConfig
 from src.Privacy_Encoding.logging import logger
@@ -16,7 +16,7 @@ class FRModel:
     
     def unfreeze_layers(self):
         for name, param in self.resnet18.named_parameters():
-            if any(layer_name in name for layer_name in self.config.unfreeze_layers):
+            if any(layer_name in name for layer_name in self.config.unfreeze_layers.layers):
                 param.requires_grad = True
                 logger.info(f"Unfreezed layer: {name}")
             else:
@@ -25,10 +25,10 @@ class FRModel:
     def create_fc_layer(self, no_of_labels):
         self.resnet18.fc = torch.nn.Linear(self.config.fc_layer_size,no_of_labels)
     
-    def get_loss_optimizer(self):
+    def get_model_loss_optimizer(self):
         lossfun = torch.nn.CrossEntropyLoss()
         optimizer = torch.optim.SGD(self.resnet18.parameters(), lr = self.config.learning_rate, momentum= self.config.momentum)
-        return lossfun, optimizer
+        return self.resnet18, lossfun, optimizer
     
     
 

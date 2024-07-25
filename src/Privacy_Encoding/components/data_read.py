@@ -52,7 +52,31 @@ class DataRead:
         # print("label count for {image_folder} is :", label_count)
 
         logger.info(f"label count for {image_folder} is : {label_count}")
-        return x_train, y_train
+        return x_train, y_train, label_count
+
+
+    def label_count(self,image_folder):
+        image_files = os.listdir(image_folder)
+
+        image_files = sorted(image_files, key= self.extract_numerical_value)
+        # Loop through each image file, read it as grayscale, and append to x_train
+        label_count = defaultdict(int)
+
+        for image_file in image_files:
+            image_path = os.path.join(image_folder, image_file)
+            img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+            # label = int(image_file.split('_')[4].split('.')[0])
+            filename = image_file.split('.')[0]
+            label = int(filename.split(self.config.index_separator)[self.config.label_index])
+
+            # Check if the image is successfully loaded
+            if img is not None:    
+                label_count[label] += 1                                                                 
+            else:
+                # print(f"Failed to load {image_file}")
+                logger.info(f"Failed to load {image_file}")
+            
+            return label_count
 
 
     def normalize_dataset(self, dataset):

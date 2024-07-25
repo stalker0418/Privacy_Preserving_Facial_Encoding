@@ -2,9 +2,11 @@ from src.Privacy_Encoding.logging import logger
 from src.Privacy_Encoding.pipeline.stage_01_read_image_data import dataReadingTrainingPipeline
 from src.Privacy_Encoding.components.encoding_models import encodingModels
 from src.Privacy_Encoding.pipeline.stage_02_image_encoding import dataEncodingPipeline
+from src.Privacy_Encoding.pipeline.stage_03_model_initialization import modelInitializationPipeline
+from src.Privacy_Encoding.components.model_trainer import modelTrainer
 import numpy as np
 
-train_dataset, test_dataset = [], []
+train_dataset, test_dataset, no_of_labels = [], [], 0
 
 
 def data_read():
@@ -13,7 +15,7 @@ def data_read():
     try:
         logger.info(f"Starting {pipleline_Stage_name}")
         data_read = dataReadingTrainingPipeline()
-        (x_train,y_train), (x_test,y_test) = data_read.get_data()
+        (x_train,y_train), (x_test,y_test), label_count = data_read.get_data()
         logger.info(f"{pipleline_Stage_name} completed successfully")
         logger.info(f"x_train shape: {x_train.shape}, y_train shape: {y_train.shape}")
         logger.info(f"x_test shape: {x_test.shape}, y_test shape: {y_test.shape}")
@@ -30,7 +32,8 @@ def data_encoding():
     pipeline_stage_name = "Data Encoding Stage"
     
     try:
-        x_train, y_train, x_test, y_test = data_read()
+        x_train, y_train, x_test, y_test , label_count = data_read()
+        no_of_labels = len(label_count)
         
 
         data_encode = dataEncodingPipeline(x_train, y_train)
@@ -51,7 +54,20 @@ def data_encoding():
         logger.exception(e)
         raise e
     
-
-
-data_encoding()
+def model_initialization():
+    pipeline_stage_name = "Model Initialization Stage"
+    
+    try:
+        logger.info(f"Starting {pipeline_stage_name}................................................................")
+        model_initializer = modelInitializationPipeline(no_of_labels)
+        model, lossfun, optimizer = model_initializer.initialize_model()
+        logger.info(f"Completed {pipeline_stage_name}................................................................")
+        return model, lossfun, optimizer
+    
+    except Exception as e:
+        logger.exception(e)
+        raise e
+        
+model,lossfun,optimizer = model_initialization()
+print(model)
 

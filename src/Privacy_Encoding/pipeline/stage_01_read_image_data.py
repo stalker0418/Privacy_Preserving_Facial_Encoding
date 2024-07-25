@@ -11,9 +11,9 @@ class dataReadingTrainingPipeline:
         config = ConfigurationManager()
         data_read_config = config.get_data_read_config()
         data_read = DataRead(config = data_read_config)
-        x_train, y_train = data_read.read_images(data_read_config.train_dir)
-        x_test, y_test = data_read.read_images(data_read_config.test_dir)
+        x_train, y_train, label_count = data_read.read_images(data_read_config.train_dir)
+        x_test, y_test, _ = data_read.read_images(data_read_config.test_dir)
         x_train = data_read.normalize_dataset(x_train)
         x_test = data_read.normalize_dataset(x_test)
-        return (x_train, y_train), (x_test, y_test)
+        return (x_train, y_train), (x_test, y_test), label_count
         

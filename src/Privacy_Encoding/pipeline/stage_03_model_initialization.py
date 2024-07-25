@@ -9,13 +9,13 @@ class modelInitializationPipeline:
     def initialize_model(self):
         config = ConfigurationManager()
         model_initialization_config = config.get_model_initialization_config()
-        model = FRModel(self, model_initialization_config)
+        model = FRModel(model_initialization_config)
         model.set_first_layer()
         model.unfreeze_layers()
         model.create_fc_layer(self.no_of_labels)
-        loss, optimizer = model.get_loss_and_optimizer()
+        mymodel, lossfun, optimizer = model.get_model_loss_optimizer()
         logger.info(f"Facial Recognition Model Intitialized successfully.")
-        return model, loss, optimizer
+        return mymodel, lossfun, optimizer
     
 
 

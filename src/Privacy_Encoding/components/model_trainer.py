@@ -5,7 +5,7 @@ import time
 import torch
 
 
-class ModelTrainer:
+class modelTrainer:
     def __init__(self, model, train_loader, val_loader, criterion, optimizer,  num_epochs=25):
         self.model = model
         self.criterion = criterion
