@@ -5,7 +5,7 @@ class ImageTransformations:
     def __init__(self):
         pass
 
-    def get_transform():
+    def get_transform(self):
         transform = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Resize((224, 224)),
@@ -14,7 +14,7 @@ class ImageTransformations:
         ])
         return transform
     
-    def get_transform_90_degrees():
+    def get_transform_90_degrees(self):
         aug_transform_90 = transforms.Compose([
             transforms.ToPILImage(),
             transforms.RandomRotation(degrees=(90,90)),
@@ -24,7 +24,7 @@ class ImageTransformations:
         ])
         return aug_transform_90
     
-    def get_transform_180_degrees():
+    def get_transform_180_degrees(self):
         aug_transform_180 = transforms.Compose([
             transforms.ToPILImage(),
             transforms.RandomRotation(degrees=(180,180)),
@@ -34,7 +34,7 @@ class ImageTransformations:
         ])
         return aug_transform_180
     
-    def get_transform_270_degrees():
+    def get_transform_270_degrees(self):
         aug_transform_270 = transforms.Compose([
             transforms.ToPILImage(),
             transforms.RandomRotation(degrees=(270,270)),
@@ -44,7 +44,7 @@ class ImageTransformations:
         ])
         return aug_transform_270
     
-    def get_transform_flip():
+    def get_transform_flip(self):
         aug_transform_flip = transforms.Compose([
             transforms.ToPILImage(),
             transforms.RandomHorizontalFlip(p=1),
@@ -54,7 +54,7 @@ class ImageTransformations:
         ])
         return aug_transform_flip
     
-    def get_transform_random_flip():
+    def get_transform_random_flip(self):
         aug_transform_flip_random = transforms.Compose([
             transforms.ToPILImage(),
             transforms.RandomHorizontalFlip(p=1),
@@ -65,7 +65,7 @@ class ImageTransformations:
         ])
         return aug_transform_flip_random
     
-    def get_transform_random():
+    def get_transform_random(self):
         aug_transform_random = transforms.Compose([
             transforms.ToPILImage(),
             transforms.RandomRotation(degrees=(-20,20)),
