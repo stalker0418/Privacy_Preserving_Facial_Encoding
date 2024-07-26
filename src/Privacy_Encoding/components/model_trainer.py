@@ -6,16 +6,10 @@ import torch
 
 
 class modelTrainer:
-    def __init__(self, model, train_loader, val_loader, criterion, optimizer,  num_epochs=25):
-        self.model = model
-        self.criterion = criterion
-        self.optimizer = optimizer
-        self.train_loader = train_loader
-        self.val_loader = val_loader
-        self.epochs = num_epochs
-        # self.batch_size = batch_size
+    def __init__(self):
+        pass
     
-    def train_model(self, is_train=True):
+    def train_model(self, model, train_loader, val_loader, criterion, optimizer, num_epochs=25, is_train=True):
         since = time.time()
         
         acc_history = []
@@ -28,23 +22,23 @@ class modelTrainer:
 
         best_acc = 0.0
         
-        for epoch in range(self.num_epochs):
-            self.model.train()  # Set the model to training mode
+        for epoch in range(num_epochs):
+            model.train()  # Set the model to training mode
             running_loss = 0.0
             running_corrects = 0
             correct_train = 0
             total_train = 0
 
-            for images, labels in self.train_loader:
-                self.optimizer.zero_grad()  # Zero the gradients
+            for images, labels in train_loader:
+                optimizer.zero_grad()  # Zero the gradients
 
                 # Forward pass
-                outputs = self.model(images)
-                loss = self.criterion(outputs, labels)
+                outputs = model(images)
+                loss = criterion(outputs, labels)
 
                 # Backward pass and optimization
                 loss.backward()
-                self.optimizer.step()
+                optimizer.step()
 
                 running_loss += loss.item()
 
@@ -53,7 +47,7 @@ class modelTrainer:
                 total_train += labels.size(0)
                 correct_train += (predicted == labels).sum().item()
 
-            train_loss = running_loss / len(self.train_loader)
+            train_loss = running_loss / len(train_loader)
             train_accuracy = correct_train / total_train
             train_loss_history.append(train_loss)
             train_accuracy_history.append(train_accuracy)
@@ -61,16 +55,16 @@ class modelTrainer:
             print('Loss: {:.4f} Acc: {:.4f}'.format(train_loss, train_accuracy))
 
             # Validation
-            self.model.eval()  # Set the model to evaluation mode
+            model.eval()  # Set the model to evaluation mode
             correct_val = 0
             total_val = 0
             val_running_loss = 0.0
             
 
             with torch.no_grad():
-                for images, labels in self.val_loader:
-                    outputs = self.model(images)
-                    loss = self.criterion(outputs, labels)
+                for images, labels in val_loader:
+                    outputs = model(images)
+                    loss = criterion(outputs, labels)
 
                     val_running_loss += loss.item()
 
@@ -79,14 +73,14 @@ class modelTrainer:
                     total_val += labels.size(0)
                     correct_val += (predicted == labels).sum().item()
 
-                val_loss = val_running_loss / len(self.val_loader)
+                val_loss = val_running_loss / len(val_loader)
                 val_accuracy = correct_val / total_val
                 val_loss_history.append(val_loss)
                 val_accuracy_history.append(val_accuracy)
 
             # scheduler.step(val_loss)
 
-            print(f"Epoch [{epoch + 1}/{self.num_epochs}] Train Loss: {train_loss:.4f}, Train Acc: {train_accuracy:.4f}, Val Loss: {val_loss:.4f}, Val Acc: {val_accuracy:.4f}")
+            print(f"Epoch [{epoch + 1}/{num_epochs}] Train Loss: {train_loss:.4f}, Train Acc: {train_accuracy:.4f}, Val Loss: {val_loss:.4f}, Val Acc: {val_accuracy:.4f}")
 
         time_elapsed = time.time() - since
         print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))

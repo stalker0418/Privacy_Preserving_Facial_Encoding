@@ -1,5 +1,3 @@
-# This file is the whole source code of the project. Untidied version having the whole work flow of all the encodings with training model
-
 import numpy as np
 import matplotlib.pyplot as plt
 import torch

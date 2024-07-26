@@ -24,6 +24,7 @@ class FRModel:
 
     def create_fc_layer(self, no_of_labels):
         self.resnet18.fc = torch.nn.Linear(self.config.fc_layer_size,no_of_labels)
+        logger.info(f"The last layer is {no_of_labels}")
     
     def get_model_loss_optimizer(self):
         lossfun = torch.nn.CrossEntropyLoss()

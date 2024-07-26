@@ -3,12 +3,10 @@ from src.Privacy_Encoding.pipeline.stage_01_read_image_data import dataReadingTr
 from src.Privacy_Encoding.components.encoding_models import encodingModels
 from src.Privacy_Encoding.pipeline.stage_02_image_encoding import dataEncodingPipeline
 from src.Privacy_Encoding.pipeline.stage_03_model_initialization import modelInitializationPipeline
-from src.Privacy_Encoding.components.model_trainer import modelTrainer
-from src.Privacy_Encoding.components.transforms import ImageTransformations
-import numpy as np
-import torch
+from src.Privacy_Encoding.pipeline.stage_04_model_training import modelTrainerPipeline
 
-train_dataset, test_dataset, no_of_labels = [], [], 0
+
+train_dataloader, test_dataloader, no_of_labels = [], [], 0
 
 
 def data_read():
@@ -25,9 +23,6 @@ def data_read():
         logger.info(f"x_train shape: {x_train.shape}, y_train shape: {y_train.shape}")
         logger.info(f"x_test shape: {x_test.shape}, y_test shape: {y_test.shape}")
 
-
-        train_dataset.append(x_train)
-        test_dataset.append(x_test)
         return x_train, y_train, x_test, y_test, label_count
     except Exception as e:
         logger.exception(e)
@@ -39,16 +34,19 @@ def data_encoding():
     
     try:
 
-        transform = ImageTransformations()
+        global train_dataloader 
+        global test_dataloader
+        global no_of_labels
+
         x_train, y_train, x_test, y_test , label_count = data_read()
         no_of_labels = len(label_count)
 
         data_encode = dataEncodingPipeline(x_train, y_train, x_test,y_test)
         
-        train_dataset, test_dataset = data_encode.get_encoded_tensors()
+        train_dataloader, test_dataloader = data_encode.get_encoded_tensors()
 
-        logger.info(f"completed appending the new encoded datasets. The shape is of Train is :{train_dataset[1].shape}\n, Test is :{len(test_dataset)}")
-        
+        logger.info(f"completed appending the new encoded datasets. ")
+        return train_dataloader, test_dataloader
     except Exception as e:
         logger.exception(e)
         raise e
@@ -58,6 +56,7 @@ def model_initialization():
     
     try:
         logger.info(f"Starting {pipeline_stage_name}................................................................")
+        print(no_of_labels)
         model_initializer = modelInitializationPipeline(no_of_labels)
         model, lossfun, optimizer = model_initializer.initialize_model()
         logger.info(f"Completed {pipeline_stage_name}................................................................")
@@ -66,8 +65,17 @@ def model_initialization():
     except Exception as e:
         logger.exception(e)
         raise e
-        
-# model,lossfun,optimizer = model_initialization()
+    
+def model_trainer():
+    pipeline_stage_name = "Model Training Stage"
+    logger.info(f"Started Running {pipeline_stage_name}")
+    data_encoding()
+    model,lossfun, optimizer = model_initialization()
+    for i in range(len(train_dataloader)):
+        model_trainer = modelTrainerPipeline(model, train_dataloader[i], test_dataloader[i], lossfun, optimizer)
+        model_trainer.train_model()
+                
 
-data_encoding()
+
+model_trainer()
 

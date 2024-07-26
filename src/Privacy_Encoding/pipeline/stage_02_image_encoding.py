@@ -7,6 +7,7 @@ from src.Privacy_Encoding.utils.imageHandling import *
 from src.Privacy_Encoding.components.transforms import ImageTransformations
 from src.Privacy_Encoding.entity import encodingsConfig
 import torch
+from torch.utils.data import TensorDataset, DataLoader
 
 
 class dataEncodingPipeline():
@@ -66,7 +67,16 @@ class dataEncodingPipeline():
             self.train_dataset.append(x_tensor_train)
             self.test_dataset.append(x_tensor_test)
         
-        return self.train_dataset, self.test_dataset
+
+        y_tensor_train, y_tensor_test = torch.LongTensor(self.y_train), torch.LongTensor(self.y_test)
+        self.train_dataset, self. test_dataset = [TensorDataset(i, y_tensor_train) for i in self.train_dataset], [TensorDataset(i, y_tensor_test) for i in self.test_dataset]
+        
+        # print(f"The length of train_dataset is {len(self.train_dataset)} ")
+        train_dataloader, test_dataloader = [DataLoader(i,batch_size=4, shuffle=True) for i in self.train_dataset], [DataLoader(i, batch_size=4, shuffle=True) for i in self.test_dataset]
+        print(f"The length of train_dataloader is {len(train_dataloader)} ")
+
+        logger.info(f"Successfullly converted the encoded data to tensor data loaders")       
+        return train_dataloader, test_dataloader
     
     
 
