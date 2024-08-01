@@ -9,9 +9,9 @@ data_read:
 
 encoding_techniques:
   single_convolution: True
-  double_convolution: False
-  patch_convolution: False
-  pseudo_differential_privacy: False
+  double_convolution: True
+  patch_convolution: True
+  pseudo_differential_privacy: True
   pseudo_differential_privacy_patched: False
   differential_privacy: False
   differential_privacy_patched: False
