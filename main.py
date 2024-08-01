@@ -7,6 +7,7 @@ from src.Privacy_Encoding.pipeline.stage_04_model_training import modelTrainerPi
 
 
 train_dataloader, test_dataloader, no_of_labels = [], [], 0
+used_techniques = ["Original"]
 
 
 def data_read():
@@ -37,6 +38,7 @@ def data_encoding():
         global train_dataloader 
         global test_dataloader
         global no_of_labels
+        global used_techniques
 
         x_train, y_train, x_test, y_test , label_count = data_read()
         no_of_labels = len(label_count)
@@ -44,6 +46,7 @@ def data_encoding():
         data_encode = dataEncodingPipeline(x_train, y_train, x_test,y_test)
         
         train_dataloader, test_dataloader = data_encode.get_encoded_tensors()
+        used_techniques = data_encode.get_used_techniques()
 
         logger.info(f"completed appending the new encoded datasets. ")
         return train_dataloader, test_dataloader
@@ -68,12 +71,15 @@ def model_initialization():
     
 def model_trainer():
     pipeline_stage_name = "Model Training Stage"
+
     logger.info(f"Started Running {pipeline_stage_name}")
     data_encoding()
     model,lossfun, optimizer = model_initialization()
     for i in range(len(train_dataloader)):
         model_trainer = modelTrainerPipeline(model, train_dataloader[i], test_dataloader[i], lossfun, optimizer)
         model_trainer.train_model()
+        logger.info(f"Completed Model Training in the technique {used_techniques[i]}-----------------------------------------")
+    print(used_techniques)
                 
 
 

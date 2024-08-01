@@ -8,17 +8,17 @@ data_read:
   label_index: 4
 
 encoding_techniques:
-  single_convolution: True
-  double_convolution: True
+  single_convolution: False
+  double_convolution: False
   patch_convolution: True
-  pseudo_differential_privacy: True
+  pseudo_differential_privacy: False
   pseudo_differential_privacy_patched: False
   differential_privacy: False
   differential_privacy_patched: False
   differential_privacy_single_convolution: False
 
 save_encoding_images:
-  enabled: False
+  enabled: True
   output_dir: data/encoded_data/
 
 

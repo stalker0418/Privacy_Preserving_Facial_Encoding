@@ -10,7 +10,7 @@ class encodingModels:
     def patching_encoder(self):
         # Model used to perform Patching on Images
         patching_model = keras.Sequential([
-            layers.Conv2D(filters=32,kernel_size= (5,5), strides= (5,5), activation= 'relu', input_shape = (self.x_train.shape[1], self.x_train.shape[2], 1)),
+            layers.Conv2D(filters=32,kernel_size= (7,7), strides= (7,7), activation= 'relu', input_shape = (self.x_train.shape[1], self.x_train.shape[2], 1)),
             layers.MaxPooling2D(pool_size=(2,2))
         ])
 
